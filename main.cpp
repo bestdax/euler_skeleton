@@ -1,32 +1,28 @@
 #include <string>
 #include <fstream>
 #include <ctime>
+#include <filesystem>
 
-void mkdir(std::string dirs)
+
+
+std::string path()
 {
-	std::string mkdir = "mkdir -p ";
-	mkdir += dirs;
-	std::system(mkdir.c_str());
+
 }
 
-void newfile(std::string filename, std::string content)
+void mk_problem_and_test_dir(std::string dirname)
 {
-	std::ofstream file(filename);
-	file << content << std::endl;
-}
-int main(int argc, char *argv[])
-{
-	if(argc < 2) return 1;
-
-	// create directories
 	std::string src{"src/"};
-	src += argv[1];
+	src += dirname;
 	std::string tests{"tests/"};
-	tests += argv[1];
+	tests += dirname;
 	mkdir(src);
 	mkdir(tests);
-	// prepare contents
-	std::string src_main_content = R""""(#include "problem.h"
+}
+
+void create_problem_cpp_file(std::string filename)
+{
+	std::string content = R""""(#include "problem.h"
 
 int main(int argc, char *argv[])
 {
@@ -56,6 +52,23 @@ void Solution::answer()
 	std::cout << "The answer is: " << "" << std::endl;
 }
 )"""";
+	newfile(filename, content);
+}
+
+int main(int argc, char *argv[])
+{
+	if(argc < 3) return 1;
+
+
+	if(strcmp(argv[1], "euler") == 0)
+	{
+	// check if the working directory is projecteuler
+	auto current_path = std::filesystem::current_path();
+	if(current_path.filename() != "projecteuler") return 1;
+	// create directories
+	mk_problem_and_test_dir(argv[2]);
+	// create files
+	create_problem_cpp_file(argv[2]);
 	std::string src_problem_header_content = R""""(#pragma once
 #include <iostream>
 
@@ -96,4 +109,5 @@ int main(int argc, char *argv[])
 	newfile(tests + "/CMakeLists.txt", tests_cmake_content);
 	newfile(tests + "/test.cpp", tests_cpp_content);
 	return 0;
+}
 }

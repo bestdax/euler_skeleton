@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(euler_skeleton VERSION 1.0)
-add_executable(euler main.cpp)
+project(project_template VERSION 1.0)
+add_executable(prt main.cpp)
 
-install(TARGETS euler DESTINATION bin)
+install(TARGETS prt DESTINATION bin)
