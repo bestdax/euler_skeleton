@@ -7,7 +7,7 @@ ProjectTemplate::ProjectTemplate()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(project_euler VERSION 1.0)
+project(project_name VERSION 1.0)
 
 add_subdirectory(src)
 add_subdirectory(tests)
@@ -25,7 +25,7 @@ endforeach()
 )"""";
 	problem_cmake_content = R""""(get_filename_component(CURRENT_DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 set(targetname ${CURRENT_DIR_NAME})
-add_executable(${targetname} main.cpp problem.cpp
+add_executable(${targetname} main.cpp problem.cpp)
 )"""";
   problem_test_cmake_content = R""""(get_filename_component(CURRENT_DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 set(targetname test_${CURRENT_DIR_NAME})
@@ -100,9 +100,8 @@ void ProjectTemplate::create_file(std::filesystem::path path, std::string conten
 	file << content << std::endl;
 }
 
-void ProjectTemplate::create_euler_project(std::string prj_name)
+void ProjectTemplate::create_project(std::string prj_name)
 {
-	if(project_dir.filename() != "projecteuler") return;
 
 	// create dirs
 	std::filesystem::path src_dir{project_dir}, test_dir{project_dir};
@@ -131,7 +130,7 @@ void ProjectTemplate::create_euler_project(std::string prj_name)
 	main_cmake_path /= "CMakeLists.txt";
 
 	if(!std::filesystem::is_regular_file(main_cmake_path))
-		create_file(main_cmake_path, main_cpp_content);
+		create_file(main_cmake_path, main_cmake_content);
 
 	// create subdir CMakeLists.txt
 	std::filesystem::path src_cmake_path{src_dir};
@@ -181,8 +180,4 @@ void ProjectTemplate::create_euler_project(std::string prj_name)
 
 	if(!std::filesystem::is_regular_file(problem_test_cpp_path))
 		create_file(problem_test_cpp_path, problem_test_cpp_content);
-}
-
-void ProjectTemplate::create_algorithm_project()
-{
 }

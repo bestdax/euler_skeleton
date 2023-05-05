@@ -4,13 +4,8 @@ int main(int argc, char *argv[])
 {
 	ProjectTemplate t;
 
-	if(argc < 3) return 1;
+	if(argc < 2) return 1;
 
-	if(strcmp(argv[1], "euler") == 0)
-		t.create_euler_project(argv[2]);
-
-	if(strcmp(argv[1], "algo") == 0)
-		t.create_algorithm_project();
-
+	t.create_project(argv[1]);
 	return 0;
 }
