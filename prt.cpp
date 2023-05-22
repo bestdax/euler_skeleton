@@ -62,6 +62,7 @@ dax )"""";
 
 void Solution::answer()
 {
+	std::cout << "The answer is: " << "" << std::endl;
 }
 )"""";
   problem_test_cpp_content = R""""(#include "gtest/gtest.h"
@@ -173,6 +174,13 @@ void ProjectTemplate::create_project(std::string prj_name)
 
 	if(!std::filesystem::is_regular_file(problem_cpp_path))
 		create_file(problem_cpp_path, problem_cpp_content);
+
+	// create main.cpp
+	std::filesystem::path main_cpp_path{problem_dir};
+	main_cpp_path /= "main.cpp";
+
+	if(!std::filesystem::is_regular_file(main_cpp_path))
+		create_file(main_cpp_path, main_cpp_content);
 
 	// create problem test cpp file
 	std::filesystem::path problem_test_cpp_path{problem_test_dir};
