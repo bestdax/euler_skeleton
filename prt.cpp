@@ -1,4 +1,5 @@
 #include "prt.h"
+#include <fstream>
 
 ProjectTemplate::ProjectTemplate()
 {
@@ -103,16 +104,20 @@ void ProjectTemplate::create_project(std::string prj_name)
 {
 
 	// create dirs
-	std::filesystem::path src_dir{project_dir}, test_dir{project_dir};
+	std::filesystem::path src_dir{project_dir}, test_dir{project_dir}, notes_dir{project_dir};
 	
 	src_dir /= "src";
 	test_dir /= "tests";
+	notes_dir /= "notes";
 
 	if(!std::filesystem::is_directory(src_dir))
 		mkdir(src_dir);
 
 	if(!std::filesystem::is_directory(test_dir))
 		mkdir(test_dir);
+
+	if(!std::filesystem::is_directory(notes_dir))
+		mkdir(notes_dir);
 
 	std::filesystem::path problem_dir{src_dir}, problem_test_dir{test_dir};
 	problem_dir /= prj_name;
@@ -190,4 +195,40 @@ void ProjectTemplate::create_project(std::string prj_name)
 
 	if(!std::filesystem::is_regular_file(problem_test_cpp_path))
 		create_file(problem_test_cpp_path, problem_test_cpp_content);
+
+	// create problem note
+	std::filesystem::path problem_note_path{notes_dir};
+	problem_note_path /= prj_name + ".tex";
+
+	if(!std::filesystem::is_regular_file(problem_note_path))
+		create_file(problem_note_path, "");
+
+	// add include problem to euler.tex
+	std::filesystem::path euler_path{notes_dir};
+	euler_path /= "euler.tex";
+	std::fstream file(euler_path, std::ios::in | std::ios::out | std::ios::ate);
+	std::string line;
+	if(file.is_open())
+	{
+		auto pos = file.tellg();
+		int count = 0;
+		while(pos > 0)
+		{
+			pos -= static_cast<std::fstream::pos_type>(1);
+			file.seekg(pos);
+			if(file.get() == '\n')
+			{
+				++count;
+
+				if(count == 2)
+					break;
+
+			}
+		}
+		file.seekp(pos);
+		file << "\n\\include{" << prj_name << '}'
+			<< "\n" << "\\end{document}"<< std::endl;
+	}
+	file.close();
+
 }
