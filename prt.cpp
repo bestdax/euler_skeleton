@@ -50,9 +50,7 @@ int main(int argc, char *argv[])
 	strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", curtime);
 	std::string time_str(buffer);
 	problem_cpp_content = R""""(/*
-Problem description:
-
-page link:
+Problem page link:
 https://projecteuler.net/problem=
 
 dax )"""";
@@ -169,6 +167,10 @@ void ProjectTemplate::create_project(std::string prj_name)
 		create_file(problem_header_path, problem_header_content);
 
 	// create problem cpp file
+	int serial_no = std::stoi(prj_name.substr(7));
+	auto n = problem_cpp_content.find('=');
+	problem_cpp_content.insert(n+1, std::to_string(serial_no));
+
 	std::filesystem::path problem_cpp_path{problem_dir};
 	problem_cpp_path /= "problem.cpp";
 
