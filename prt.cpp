@@ -9,10 +9,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(project_name VERSION 1.0)
+include(CTest)
 
 add_subdirectory(src)
 add_subdirectory(tests)
-add_subdirectory(googletest)
+add_subdirectory(external)
 )"""";
 	subdir_cmake_content = R""""(file(
   GLOB SUBDIRS
@@ -28,12 +29,15 @@ endforeach()
 set(targetname ${CURRENT_DIR_NAME})
 add_executable(${targetname} main.cpp problem.cpp)
 )"""";
-  problem_test_cmake_content = R""""(get_filename_component(CURRENT_DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-set(targetname test_${CURRENT_DIR_NAME})
-add_executable(${targetname} test.cpp ${PROJECT_SOURCE_DIR}/src/${CURRENT_DIR_NAME}/problem.cpp)
-target_include_directories(${targetname} PUBLIC ${PROJECT_SOURCE_DIR}/googletest/googletest/include)
-target_include_directories(${targetname} PUBLIC ${PROJECT_SOURCE_DIR}/src/${CURRENT_DIR_NAME}/)
-target_link_libraries(${targetname} gtest_main)
+  problem_test_cmake_content = R""""(if(BUILD_TESTING)
+get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+set(EXENAME ${DIR_NAME}_test)
+add_executable(${EXENAME} test.cpp ${PROJECT_SOURCE_DIR}/src/${CURRENT_DIR_NAME}/problem.cpp)
+target_include_directories(${EXENAME} PUBLIC ${PROJECT_SOURCE_DIR}/src/${CURRENT_DIR_NAME}/)
+target_link_libraries(${EXENAME} PRIVATE gtest_main)
+include(GoogleTest)
+gtest_discover_tests(${EXENAME})
+endif()
 )"""";
   main_cpp_content = R""""(#include "problem.h"
 
@@ -69,10 +73,9 @@ void Solution::answer()
 
 Solution solution;
 
-int main(int argc, char *argv[])
+TEST(eulerno, testname)
 {
-  testing::InitGoogleTest();
-  return RUN_ALL_TESTS();
+	
 }
 )"""";
   problem_header_content = R""""(#pragma once
