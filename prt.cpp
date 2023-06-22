@@ -26,14 +26,13 @@ foreach(SUBDIR ${SUBDIRS})
 endforeach()
 )"""";
 	problem_cmake_content = R""""(get_filename_component(CURRENT_DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-set(targetname ${CURRENT_DIR_NAME})
-add_executable(${targetname} main.cpp problem.cpp)
-)"""";
+set(EXENAME ${CURRENT_DIR_NAME})
+add_executable(${EXENAME} main.cpp problem.cpp))"""";
   problem_test_cmake_content = R""""(if(BUILD_TESTING)
 get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 set(EXENAME ${DIR_NAME}_test)
-add_executable(${EXENAME} test.cpp ${PROJECT_SOURCE_DIR}/src/${CURRENT_DIR_NAME}/problem.cpp)
-target_include_directories(${EXENAME} PUBLIC ${PROJECT_SOURCE_DIR}/src/${CURRENT_DIR_NAME}/)
+add_executable(${EXENAME} test.cpp ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/problem.cpp)
+target_include_directories(${EXENAME} PUBLIC ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/)
 target_link_libraries(${EXENAME} PRIVATE gtest_main)
 include(GoogleTest)
 gtest_discover_tests(${EXENAME})
