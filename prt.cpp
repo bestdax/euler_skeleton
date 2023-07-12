@@ -47,6 +47,12 @@ int main(int argc, char *argv[])
   return 0;
 }
 )"""";
+	problem_note_content = R""""(\chapter{title}
+\section{Problem Description}
+\begin{tcolorbox}
+
+\end{tcolorbox}
+		)"""";
 
 	time_t _tm = time(NULL);
 	struct tm * curtime = localtime(&_tm);
@@ -203,7 +209,7 @@ void ProjectTemplate::create_project(std::string prj_name)
 	problem_note_path /= prj_name + ".tex";
 
 	if(!std::filesystem::is_regular_file(problem_note_path))
-		create_file(problem_note_path, "");
+		create_file(problem_note_path, problem_note_content);
 
 	// add include problem to euler.tex
 	std::filesystem::path euler_path{notes_dir};

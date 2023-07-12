@@ -24,4 +24,5 @@ private:
 	std::string problem_cpp_content;
 	std::string problem_test_cpp_content;
 	std::string problem_header_content;
+	std::string problem_note_content;
 };
