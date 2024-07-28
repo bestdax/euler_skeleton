@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
   return 0;
 }
 )"""";
-	problem_note_content = R""""(\chapter{title}
-\section{Problem Description}
+	problem_note_content = R""""(\section{title}
+\subsection{Problem Description}
 \begin{tcolorbox}
 
 \end{tcolorbox}
