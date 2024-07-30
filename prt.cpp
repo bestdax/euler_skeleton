@@ -51,8 +51,7 @@ int main(int argc, char *argv[])
 \subsection{Problem Description}
 \begin{tcolorbox}
 
-\end{tcolorbox}
-		)"""";
+\end{tcolorbox})"""";
 
 	time_t _tm = time(NULL);
 	struct tm * curtime = localtime(&_tm);
