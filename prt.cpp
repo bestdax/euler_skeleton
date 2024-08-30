@@ -28,7 +28,7 @@ endforeach()
 	problem_cmake_content = R""""(get_filename_component(CURRENT_DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 set(EXENAME ${CURRENT_DIR_NAME})
 add_executable(${EXENAME} main.cpp problem.cpp))"""";
-  problem_test_cmake_content = R""""(if(BUILD_TESTING)
+	problem_test_cmake_content = R""""(if(BUILD_TESTING)
 get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 set(EXENAME ${DIR_NAME}_test)
 add_executable(${EXENAME} test.cpp ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/problem.cpp)
@@ -38,12 +38,14 @@ include(GoogleTest)
 gtest_discover_tests(${EXENAME})
 endif()
 )"""";
-  main_cpp_content = R""""(#include "problem.h"
+	main_cpp_content = R""""(#include "problem.h"
+#include "timer.h"
 
 int main(int argc, char *argv[])
 {
   Solution solution;
-  solution.answer();
+	func = [&solution](){solution.answer();};
+	measure_exe_time(func);
   return 0;
 }
 )"""";
@@ -72,7 +74,7 @@ void Solution::answer()
 	std::cout << "The answer is: " << "" << std::endl;
 }
 )"""";
-  problem_test_cpp_content = R""""(#include "gtest/gtest.h"
+	problem_test_cpp_content = R""""(#include "gtest/gtest.h"
 #include "problem.h"
 
 Solution solution;
@@ -82,7 +84,7 @@ TEST(eulerno, testname)
 	
 }
 )"""";
-  problem_header_content = R""""(#pragma once
+	problem_header_content = R""""(#pragma once
 #include <iostream>
 
 class Solution
@@ -112,7 +114,7 @@ void ProjectTemplate::create_project(std::string prj_name)
 
 	// create dirs
 	std::filesystem::path src_dir{project_dir}, test_dir{project_dir}, notes_dir{project_dir};
-	
+
 	src_dir /= "src";
 	test_dir /= "tests";
 	notes_dir /= "notes";
@@ -234,7 +236,7 @@ void ProjectTemplate::create_project(std::string prj_name)
 		}
 		file.seekp(pos);
 		file << "\n\\include{" << prj_name << '}'
-			<< "\n" << "\\end{document}"<< std::endl;
+		     << "\n" << "\\end{document}"<< std::endl;
 	}
 	file.close();
 
