@@ -44,7 +44,11 @@ endif()
 int main(int argc, char *argv[])
 {
   Solution solution;
-	func = [&solution](){solution.answer();};
+	auto func = [&solution]()
+	{
+		solution.answer();
+	};
+
 	measure_exe_time(func);
   return 0;
 }
