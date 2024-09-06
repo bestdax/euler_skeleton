@@ -43,16 +43,15 @@ endif()
 
 int main(int argc, char *argv[])
 {
-  Solution solution;
+	Solution solution;
 	auto func = [&solution]()
 	{
 		solution.answer();
 	};
 
 	measure_exe_time(func);
-  return 0;
-}
-)"""";
+	return 0;
+})"""";
 	problem_note_content = R""""(\section{标题}
 \subsection{问题描述}
 \begin{tcolorbox}
