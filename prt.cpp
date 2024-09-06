@@ -76,8 +76,7 @@ dax )"""";
 void Solution::answer()
 {
 	std::cout << "The answer is: " << "" << std::endl;
-}
-)"""";
+})"""";
 	problem_test_cpp_content = R""""(#include "gtest/gtest.h"
 #include "problem.h"
 
@@ -85,7 +84,7 @@ Solution solution;
 
 TEST(eulerno, testname)
 {
-	
+
 }
 )"""";
 	problem_header_content = R""""(#pragma once
@@ -93,11 +92,10 @@ TEST(eulerno, testname)
 
 class Solution
 {
-public:
-  void answer();
+	public:
+		void answer();
 
-};
-)"""";
+};)"""";
 }
 
 void ProjectTemplate::mkdir(std::filesystem::path path)
@@ -162,7 +160,6 @@ void ProjectTemplate::create_project(std::string prj_name)
 	if(!std::filesystem::is_regular_file(test_cmake_path))
 		create_file(test_cmake_path, subdir_cmake_content);
 
-
 	// create problem CMakeLists.txt
 	std::filesystem::path problem_cmake_path{problem_dir};
 	problem_cmake_path /= "CMakeLists.txt";
@@ -187,7 +184,7 @@ void ProjectTemplate::create_project(std::string prj_name)
 	// create problem cpp file
 	int serial_no = std::stoi(prj_name.substr(7));
 	auto n = problem_cpp_content.find('=');
-	problem_cpp_content.insert(n+1, std::to_string(serial_no));
+	problem_cpp_content.insert(n + 1, std::to_string(serial_no));
 
 	std::filesystem::path problem_cpp_path{problem_dir};
 	problem_cpp_path /= "problem.cpp";
@@ -221,14 +218,17 @@ void ProjectTemplate::create_project(std::string prj_name)
 	euler_path /= "euler.tex";
 	std::fstream file(euler_path, std::ios::in | std::ios::out | std::ios::ate);
 	std::string line;
+
 	if(file.is_open())
 	{
 		auto pos = file.tellg();
 		int count = 0;
+
 		while(pos > 0)
 		{
 			pos -= static_cast<std::fstream::pos_type>(1);
 			file.seekg(pos);
+
 			if(file.get() == '\n')
 			{
 				++count;
@@ -238,10 +238,12 @@ void ProjectTemplate::create_project(std::string prj_name)
 
 			}
 		}
+
 		file.seekp(pos);
 		file << "\n\\include{" << prj_name << '}'
-		     << "\n" << "\\end{document}"<< std::endl;
+		     << "\n" << "\\end{document}" << std::endl;
 	}
+
 	file.close();
 
 }
