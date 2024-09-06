@@ -56,7 +56,17 @@ int main(int argc, char *argv[])
 \subsection{问题描述}
 \begin{tcolorbox}
 
-\end{tcolorbox})"""";
+\end{tcolorbox}
+
+\subsection{算法}
+\begin{algorithm}
+	\caption{算法标题}
+	\begin{algorithmic}[1]
+
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection{答案})"""";
 
 	time_t _tm = time(NULL);
 	struct tm * curtime = localtime(&_tm);
