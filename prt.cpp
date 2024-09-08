@@ -29,15 +29,16 @@ endforeach()
 set(EXENAME ${CURRENT_DIR_NAME})
 add_executable(${EXENAME} main.cpp problem.cpp))"""";
 	problem_test_cmake_content = R""""(if(BUILD_TESTING)
-get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-set(EXENAME ${DIR_NAME}_test)
-add_executable(${EXENAME} test.cpp ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/problem.cpp)
-target_include_directories(${EXENAME} PUBLIC ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/)
-target_link_libraries(${EXENAME} gtest_main)
-include(GoogleTest)
-gtest_discover_tests(${EXENAME})
-endif()
-)"""";
+  get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+  set(EXENAME ${DIR_NAME}_test)
+  add_executable(${EXENAME} test.cpp
+                            ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/problem.cpp)
+  target_include_directories(${EXENAME}
+                             PUBLIC ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/)
+  target_link_libraries(${EXENAME} gtest_main)
+  include(GoogleTest)
+  gtest_discover_tests(${EXENAME})
+endif())"""";
 	main_cpp_content = R""""(#include "problem.h"
 #include "timer.h"
 
