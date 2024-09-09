@@ -39,7 +39,7 @@ add_executable(${EXENAME} main.cpp problem.cpp))"""";
   include(GoogleTest)
   gtest_discover_tests(${EXENAME})
 endif())"""";
-	main_cpp_content = R""""(#include <problem.h>
+	main_cpp_content = R""""(#include "problem.h"
 #include "timer.h"
 
 int main(int argc, char *argv[])
@@ -81,7 +81,7 @@ https://projecteuler.net/problem=
 dax )"""";
 	problem_cpp_content += time_str + '\n';
 	problem_cpp_content += R""""(*/
-#include <problem.h>
+#include "problem.h"
 
 void Solution::answer()
 {
