@@ -40,7 +40,7 @@ add_executable(${EXENAME} main.cpp problem.cpp))"""";
   gtest_discover_tests(${EXENAME})
 endif())"""";
 	main_cpp_content = R""""(#include "problem.h"
-#include "timer.h"
+#include <utils.h>
 
 int main(int argc, char *argv[])
 {
@@ -60,12 +60,7 @@ int main(int argc, char *argv[])
 \end{tcolorbox}
 
 \subsection{算法}
-\begin{algorithm}
-	\caption{算法标题}
-	\begin{algorithmic}[1]
 
-	\end{algorithmic}
-\end{algorithm}
 
 \subsection{答案})"""";
 
