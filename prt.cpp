@@ -27,18 +27,19 @@ endforeach()
 )"""";
 	problem_cmake_content = R""""(get_filename_component(CURRENT_DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 set(EXENAME ${CURRENT_DIR_NAME})
-add_executable(${EXENAME} main.cpp problem.cpp))"""";
+add_executable(${EXENAME} main.cpp problem.cpp)
+#target_link_libraries(${EXENAME} PUBLIC )"""";
 	problem_test_cmake_content = R""""(# 假设你的测试文件路径是 "test.cpp"
 set(TEST_FILE_PATH "test.cpp")
 
 # 读取文件内容
 file(READ ${TEST_FILE_PATH} FILE_CONTENTS)
 
-# 检查文件中是否包含 "testno"
-string(FIND "${FILE_CONTENTS}" "eulerno" TESTNO_FOUND)
+# 检查文件中是否包含 "eulerno"
+string(FIND "${FILE_CONTENTS}" "eulerno" EULERNO_FOUND)
 
-# 如果没有找到 "testno"，则生成可执行文件
-if(TESTNO_FOUND EQUAL -1)
+# 如果没有找到 "eulerno"，则生成可执行文件
+if(EULERNO_FOUND EQUAL -1)
   if(BUILD_TESTING)
     get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
     set(EXENAME ${DIR_NAME}_test)
@@ -46,7 +47,7 @@ if(TESTNO_FOUND EQUAL -1)
                               ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/problem.cpp)
     target_include_directories(${EXENAME}
                                PUBLIC ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/)
-    target_link_libraries(${EXENAME} gtest_main)
+    target_link_libraries(${EXENAME} gtest_main prime)
     include(GoogleTest)
     gtest_discover_tests(${EXENAME})
   endif()
