@@ -11,6 +11,7 @@ class ProjectTemplate
 public:
 	ProjectTemplate();
 	void create_project(std::string prj_name);
+	void load_config();
 private:
 	void mkdir(std::filesystem::path path);
 	void create_file(std::filesystem::path path, std::string content);
