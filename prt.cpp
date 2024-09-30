@@ -1,6 +1,7 @@
 #include "prt.h"
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <cstdlib>
 
 using json = nlohmann::json;
 
@@ -122,6 +123,9 @@ class Solution
 		void answer();
 
 };)"""";
+
+	home = std::filesystem::path(std::getenv("HOME"));
+	config = home / ".config/prjtemp";
 }
 
 void ProjectTemplate::mkdir(std::filesystem::path path)
