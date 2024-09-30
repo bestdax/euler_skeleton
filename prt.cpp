@@ -130,7 +130,6 @@ TEST(eulerno, testname)
 }
 )"""";
 	problem_header_content = R""""(#pragma once
-#include <iostream>
 
 class Solution
 {
