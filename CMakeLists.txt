@@ -6,6 +6,6 @@ set(CMAKE_C_COMPILER "/opt/homebrew/opt/llvm/bin/clang")
 set(CMAKE_CXX_COMPILER "/opt/homebrew/opt/llvm/bin/clang++")
 
 project(project_template VERSION 1.0)
-add_executable(prt main.cpp prt.cpp)
+add_executable(prjtemp main.cpp prt.cpp)
 
-install(TARGETS prt DESTINATION bin)
+install(TARGETS prjtemp DESTINATION bin)

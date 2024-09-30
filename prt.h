@@ -17,9 +17,8 @@ private:
 	std::filesystem::path project_dir;
 private:
 	std::string main_cmake_content;
-	std::string subdir_cmake_content;
-	std::string problem_cmake_content;
-	std::string problem_test_cmake_content;
+	std::string src_cmake_content;
+	std::string tests_cmake_content;
 	std::string main_cpp_content;
 	std::string problem_cpp_content;
 	std::string problem_test_cpp_content;

@@ -15,48 +15,67 @@ add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(external)
 )"""";
-	subdir_cmake_content = R""""(file(
+	src_cmake_content = R""""(file(
   GLOB SUBDIRS
   RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   *)
 foreach(SUBDIR ${SUBDIRS})
   if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR})
-    add_subdirectory(${SUBDIR})
+    # add_subdirectory(${SUBDIR})
+    add_executable(${SUBDIR} ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/problem.cpp
+                             ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/main.cpp)
+    # 将可执行文件放到一个单独的 bin 目录中
+    set_target_properties(${SUBDIR} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+                                               ${CMAKE_BINARY_DIR}/bin)
+    target_precompile_headers(${SUBDIR} PRIVATE
+                              ${CMAKE_SOURCE_DIR}/include/iostream_wrapper.h)
+    # 检查是否存在 config.cmake 文件
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/config.cmake)
+      include(${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/config.cmake)
+      # 如果 config.cmake 中定义了需要链接的库，就进行链接
+      if(TARGET_LIBS)
+        target_link_libraries(${SUBDIR} ${TARGET_LIBS})
+      endif()
+    endif()
   endif()
-endforeach()
-)"""";
-	problem_cmake_content = R""""(get_filename_component(CURRENT_DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-set(EXENAME ${CURRENT_DIR_NAME})
-add_executable(${EXENAME} main.cpp problem.cpp)
-#target_link_libraries(${EXENAME} PUBLIC )"""";
-	problem_test_cmake_content = R""""(# 假设你的测试文件路径是 "test.cpp"
-set(TEST_FILE_PATH "test.cpp")
+endforeach())"""";
 
-# 读取文件内容
-file(READ ${TEST_FILE_PATH} FILE_CONTENTS)
+	tests_cmake_content = R""""(file(
+  GLOB SUBDIRS
+  RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+  *)
+foreach(SUBDIR ${SUBDIRS})
+  if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR})
+    # add_subdirectory(${SUBDIR})
+    if(${SUBDIR} STREQUAL "lib")
+      add_subdirectory(${SUBDIR})
+    else()
+      add_executable(
+        ${SUBDIR}_test ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/test.cpp
+                       ${CMAKE_SOURCE_DIR}/src/${SUBDIR}/problem.cpp)
+      target_include_directories(${SUBDIR}_test
+                                 PRIVATE ${CMAKE_SOURCE_DIR}/src/${SUBDIR})
+      target_link_libraries(${SUBDIR}_test PRIVATE gtest_main)
 
-# 检查文件中是否包含 "eulerno"
-string(FIND "${FILE_CONTENTS}" "eulerno" EULERNO_FOUND)
-
-# 如果没有找到 "eulerno"，则生成可执行文件
-if(EULERNO_FOUND EQUAL -1)
-  if(BUILD_TESTING)
-    get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-    set(EXENAME ${DIR_NAME}_test)
-    add_executable(${EXENAME} test.cpp
-                              ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/problem.cpp)
-    target_include_directories(${EXENAME}
-                               PUBLIC ${PROJECT_SOURCE_DIR}/src/${DIR_NAME}/)
-    target_link_libraries(${EXENAME} gtest_main prime)
-    include(GoogleTest)
-    gtest_discover_tests(${EXENAME})
+      include(GoogleTest)
+      gtest_discover_tests(${SUBDIR}_test)
+      # 将可执行文件放到一个单独的 bin 目录中
+      set_target_properties(${SUBDIR}_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+                                                      ${CMAKE_BINARY_DIR}/bin)
+      target_precompile_headers(${SUBDIR}_test PRIVATE
+                                ${CMAKE_SOURCE_DIR}/include/iostream_wrapper.h)
+    endif()
+    # 检查是否存在 config.cmake 文件
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/config.cmake)
+      include(${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/config.cmake)
+      # 如果 config.cmake 中定义了需要链接的库，就进行链接
+      if(TARGET_LIBS)
+        target_link_libraries(${SUBDIR}_test PRIVATE ${TARGET_LIBS})
+      endif()
+    endif()
   endif()
-else()
-  message(
-    STATUS
-      "Skipping executable generation for ${TEST_FILE_PATH} because it contains 'eulerno'."
-  )
-endif())"""";
+endforeach())"""";
+
 	main_cpp_content = R""""(#include "problem.h"
 #include <utils.h>
 
@@ -170,32 +189,18 @@ void ProjectTemplate::create_project(std::string prj_name)
 	if(!std::filesystem::is_regular_file(main_cmake_path))
 		create_file(main_cmake_path, main_cmake_content);
 
-	// create subdir CMakeLists.txt
+	// create src CMakeLists.txt
 	std::filesystem::path src_cmake_path{src_dir};
 	src_cmake_path /= "CMakeLists.txt";
 
 	if(!std::filesystem::is_regular_file(src_cmake_path))
-		create_file(src_cmake_path, subdir_cmake_content);
+		create_file(src_cmake_path, src_cmake_content);
 
 	std::filesystem::path test_cmake_path{test_dir};
 	test_cmake_path /= "CMakeLists.txt";
 
 	if(!std::filesystem::is_regular_file(test_cmake_path))
-		create_file(test_cmake_path, subdir_cmake_content);
-
-	// create problem CMakeLists.txt
-	std::filesystem::path problem_cmake_path{problem_dir};
-	problem_cmake_path /= "CMakeLists.txt";
-
-	if(!std::filesystem::is_regular_file(problem_cmake_path))
-		create_file(problem_cmake_path, problem_cmake_content);
-
-	// create problem test CMakeLists.txt
-	std::filesystem::path problem_test_cmake_path{problem_test_dir};
-	problem_test_cmake_path /= "CMakeLists.txt";
-
-	if(!std::filesystem::is_regular_file(problem_test_cmake_path))
-		create_file(problem_test_cmake_path, problem_test_cmake_content);
+		create_file(test_cmake_path, tests_cmake_content);
 
 	// create problem header file
 	std::filesystem::path problem_header_path{problem_dir};
