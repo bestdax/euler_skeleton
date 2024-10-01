@@ -82,12 +82,8 @@ endforeach())"""";
 int main(int argc, char *argv[])
 {
 	Solution solution;
-	auto func = [&solution]()
-	{
-		solution.answer();
-	};
 
-	measure_exe_time(func);
+	measure_exe_time(&Solution::answer, &solution);
 	return 0;
 })"""";
 	problem_note_content = R""""(\section{标题}
