@@ -113,7 +113,7 @@ dax )"""";
 
 void Solution::answer()
 {
-	std::cout << "The answer is: " << "" << std::endl;
+	print("The answer is:");
 })"""";
 	problem_test_cpp_content = R""""(#include "gtest/gtest.h"
 #include "problem.h"
