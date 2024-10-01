@@ -77,7 +77,6 @@ foreach(SUBDIR ${SUBDIRS})
 endforeach())"""";
 
 	main_cpp_content = R""""(#include "problem.h"
-#include <utils.h>
 
 int main(int argc, char *argv[])
 {
@@ -126,6 +125,7 @@ TEST(eulerno, testname)
 }
 )"""";
 	problem_header_content = R""""(#pragma once
+#include <utils.h>
 
 class Solution
 {
