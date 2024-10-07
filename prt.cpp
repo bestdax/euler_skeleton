@@ -1,5 +1,6 @@
 #include "prt.h"
 #include <fstream>
+#include <regex>
 
 ProjectTemplate::ProjectTemplate()
 {
@@ -85,7 +86,7 @@ int main(int argc, char *argv[])
 	measure_exe_time(&Solution::answer, &solution);
 	return 0;
 })"""";
-	problem_note_content = R""""(\section{标题}
+	problem_note_content = R""""(\section{标题}$1
 \subsection{问题描述}
 \begin{tcolorbox}
 
@@ -232,6 +233,10 @@ void ProjectTemplate::create_project(std::string prj_name)
 	// create problem note
 	std::filesystem::path problem_note_path{notes_dir};
 	problem_note_path /= prj_name + ".tex";
+
+	std::regex pattern("\\$1");
+
+	problem_note_content = std::regex_replace(problem_note_content, pattern, "\\label{sec:" + prj_name + "}");
 
 	if(!std::filesystem::is_regular_file(problem_note_path))
 		create_file(problem_note_path, problem_note_content);
